@@ -1,26 +1,7 @@
-// Connect to MongoDB Atlas
-const mongoClient = require("mongodb").MongoClient;
-const uri = "mongodb+srv://DogActivityTrackerMDBUser:yYLTjbqVYuOLcSDn@dogactivitytrackerclust.u0usm08.mongodb.net/";
-const client = new mongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-// Connect to the MongoDB database
-let db;
-client.connect((err) => {
-    if (err) {
-        console.error("Error connecting to MongoDB Atlas:", err);
-        return;
-    }
-    console.log("Connected to MongoDB Atlas");
-    db = client.db("DogActivityTrackerCluster");
-});
 
 // Function to log activity
-function logActivity(activityType, callback) {
-    if (!db) {
-        console.error("MongoDB connection not established");
-        return;
-    }
-
+function logActivity(activityType) {
     var amountInput = document.getElementById('food-amount');
     var peeCheckbox = document.getElementById('pee');
     var poopCheckbox = document.getElementById('poop');
@@ -37,7 +18,7 @@ function logActivity(activityType, callback) {
         amount = parseInt(amount);
     }
 
-    const activityList = db.collection('activities');
+    var activityList = JSON.parse(localStorage.getItem('activityList')) || [];
     var newActivity = {
         type: activityType,
         amount: activityType === 'food' ? amount : null,
@@ -46,17 +27,12 @@ function logActivity(activityType, callback) {
         timestamp: new Date().toISOString()
     };
     if (activityType !== undefined ) {
-        activityList.insertOne(newActivity, (err, result) => {
-            if (err) {
-                console.error("Error inserting activity into MongoDB:", err);
-                return;
-            }
-            console.log("Activity logged successfully:", result.insertedId);
-            if (typeof callback === 'function') {
-                callback(); // Execute the callback function
-            }
-        });
+        activityList.push(newActivity);
     }
+    localStorage.setItem('activityList', JSON.stringify(activityList));
+    displayActivities();
+    calculateDailySummary();
+    calculateWeeklySummary();
 
     // Clear input fields after logging the activity and hide the respective form
     amountInput.value = '';
@@ -83,58 +59,42 @@ function showWalkForm() {
 }
 
 // Function to delete activity
-function deleteActivity(id) {
-    const activityList = db.collection('activities');
-    activityList.deleteOne({ _id: id }, (err, result) => {
-        if (err) {
-            console.error("Error deleting activity from MongoDB:", err);
-            return;
-        }
-        console.log("Activity deleted successfully:", id);
-        displayActivities();
-        calculateDailySummary();
-        calculateWeeklySummary();
-    });
+function deleteActivity(index) {
+    var activityList = JSON.parse(localStorage.getItem('activityList')) || [];
+    activityList.splice(index, 1); // Remove activity at index
+    localStorage.setItem('activityList', JSON.stringify(activityList));
+    displayActivities();
+    calculateDailySummary();
+    calculateWeeklySummary();
 }
+
 // Function to clear all activities
 function clearAll() {
-    const activityList = db.collection('activities');
-    activityList.deleteMany({}, (err, result) => {
-        if (err) {
-            console.error("Error clearing activities from MongoDB:", err);
-            return;
-        }
-        console.log("All activities cleared successfully");
-        displayActivities();
-        calculateDailySummary();
-        calculateWeeklySummary();
-    });}
+    localStorage.removeItem('activityList');
+    displayActivities();
+    calculateDailySummary();
+    calculateWeeklySummary();
+}
 
 // Function to display activities
 function displayActivities() {
-    const activityList = db.collection('activities');
-    activityList.find().toArray((err, activities) => {
-        if (err) {
-            console.error("Error fetching activities from MongoDB:", err);
-            return;
-        }
-        var activityListContainer = document.getElementById('activity-list');
-        activityListContainer.innerHTML = '';
-        activities.reverse().forEach(function(activity) {
-            var activityEntry = document.createElement('div');
-            activityEntry.classList.add('activity-entry');
-            activityEntry.textContent = 'Activity: ' + activity.type + (activity.amount ? ', Amount: ' + activity.amount + 'g' : '') + (activity.pee ? ', Pee' : '') + (activity.poop ? ', Poop' : '') + ', Time: ' + new Date(activity.timestamp).toLocaleString();
+    var activityList = JSON.parse(localStorage.getItem('activityList')) || [];
+    var activityListContainer = document.getElementById('activity-list');
+    activityListContainer.innerHTML = '';
+    activityList.reverse().forEach(function(activity, index) {
+        var activityEntry = document.createElement('div');
+        activityEntry.classList.add('activity-entry');
+        activityEntry.textContent = 'Activity: ' + activity.type + (activity.amount ? ', Amount: ' + activity.amount + 'g' : '') + (activity.pee ? ', Pee' : '') + (activity.poop ? ', Poop' : '') + ', Time: ' + new Date(activity.timestamp).toLocaleString();
 
-            // Add delete button
-            var deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Delete';
-            deleteButton.onclick = function() {
-                deleteActivity(activity._id);
-            };
-            activityEntry.appendChild(deleteButton);
+        // Add delete button
+        var deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.onclick = function() {
+            deleteActivity(index);
+        };
+        activityEntry.appendChild(deleteButton);
 
-            activityListContainer.appendChild(activityEntry);
-        });
+        activityListContainer.appendChild(activityEntry);
     });
 }
 
