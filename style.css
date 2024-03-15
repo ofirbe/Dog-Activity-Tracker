@@ -1,0 +1,151 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7; /* Light gray background */
+    color: #333; /* Dark gray text */
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto; /* Add margin for breathing space */
+    padding: 20px;
+    background-color: #fff; /* White container background */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px; /* Add spacing below heading */
+    color: #007bff; /* Blue heading color */
+}
+
+#activity-buttons {
+    margin-bottom: 20px;
+    text-align: center; /* Center buttons */
+}
+
+#activity-buttons button {
+    margin-right: 10px;
+    padding: 10px 20px; /* Increase button padding */
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff; /* White text on blue background */
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+#activity-buttons button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Styles for the forms */
+#food-form,
+#walk-form {
+    display: none;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+#food-form label,
+#walk-form label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+#food-amount,
+#pee,
+#poop {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+#food-form button,
+#walk-form button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#food-form button:hover,
+#walk-form button:hover {
+    background-color: #0056b3;
+}
+
+/* Styles for the activity entries */
+.activity-entry {
+    display: flex; /* Use flexbox layout */
+    align-items: center; /* Align items vertically */
+    justify-content: space-between; /* Space items evenly */
+    padding: 10px;
+    background-color: #f2f2f2;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.activity-entry button {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.activity-entry button:hover {
+    background-color: #c82333;
+}
+
+
+#activity-list-container {
+    max-height: 200px; /* Set maximum height for the container */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+#activity-list {
+    margin-bottom: 20px;
+}
+
+.activity-entry {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f2f2f2; /* Light gray background */
+}
+
+#daily-summary,
+#weekly-summary {
+    margin-top: 20px;
+}
+
+#weekly-summary-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#weekly-summary-table th,
+#weekly-summary-table td {
+    padding: 10px; /* Adjust cell padding */
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+#weekly-summary-table th {
+    background-color: #f2f2f2;
+}
+
+#daily-summary-title,
+#weekly-summary-title,
+#activity-list-title {
+    margin-bottom: 10px;
+}
