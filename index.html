@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Activity Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Dog Activity Tracker</h1>
+    <div id="activity-buttons">
+        <button onclick="showFoodForm()">Ate</button>
+        <button onclick="showWalkForm()">Walked</button>
+    </div>
+    <div id="food-form" style="display: none;">
+        <label for="food-amount">Amount (g):</label>
+        <input type="number" id="food-amount" placeholder="Amount (g)">
+        <button onclick="logActivity('food')">Log Activity</button>
+    </div>
+    <div id="walk-form" style="display: none;">
+        <label for="pee">Pee:</label>
+        <input type="checkbox" id="pee">
+        <label for="poop">Poop:</label>
+        <input type="checkbox" id="poop">
+        <button onclick="logActivity('walk')">Log Activity</button>
+    </div>
+    <div id="daily-summary">
+        <h2 id="daily-summary-title">Daily Summary</h2>
+        <div id="daily-summary-content">
+            <!-- Daily summary content will be displayed here -->
+        </div>
+    </div>
+    <div id="weekly-summary">
+        <h2 id="weekly-summary-title">Weekly Summary</h2>
+        <table id="weekly-summary-table">
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Food (g)</th>
+                <th>Walks</th>
+                <th>Pees</th>
+                <th>Poops</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Weekly summary rows will be added here dynamically -->
+            </tbody>
+        </table>
+    </div>
+    <h2 id="activity-list-title">activity-list</h2>
+    <div id="activity-list-container">
+        <div id="activity-list">
+            <!-- Activity entries will be added here dynamically -->
+        </div>
+    </div>
+    <button onclick="clearAll()">Clear All</button>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
