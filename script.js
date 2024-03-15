@@ -1,7 +1,23 @@
+const { MongoClient } = require('mongodb');
+const uri = 'mongodb+srv://DogActivityTrackerMDBUser:yYLTjbqVYuOLcSDn@dogactivitytrackerclust.u0usm08.mongodb.net/?retryWrites=true&w=majority&appName=DogActivityTrackerCluster';
+const client = new MongoClient(uri);
 
+async function connectToDatabase() {
+    try {
+        await client.connect();
+        console.log('Connected to MongoDB');
+    } catch (error) {
+        console.error('Error connecting to MongoDB:', error);
+    }
+}
+
+connectToDatabase();
 
 // Function to log activity
-function logActivity(activityType) {
+async function logActivity(activityType) {
+    const db = client.db('dogActivityDB');
+    const collection = db.collection('dogActivityColl');
+
     var amountInput = document.getElementById('food-amount');
     var peeCheckbox = document.getElementById('pee');
     var poopCheckbox = document.getElementById('poop');
@@ -18,18 +34,22 @@ function logActivity(activityType) {
         amount = parseInt(amount);
     }
 
-    var activityList = JSON.parse(localStorage.getItem('activityList')) || [];
-    var newActivity = {
+    const newActivity = {
         type: activityType,
         amount: activityType === 'food' ? amount : null,
         pee: activityType === 'walk' ? pee : null,
         poop: activityType === 'walk' ? poop : null,
         timestamp: new Date().toISOString()
     };
+    
     if (activityType !== undefined ) {
-        activityList.push(newActivity);
+        try {
+            const result = await collection.insertOne(newActivity);
+            console.log('Activity logged:', result.insertedId);
+        } catch (error) {
+            console.error('Error logging activity:', error);
+        }
     }
-    localStorage.setItem('activityList', JSON.stringify(activityList));
     displayActivities();
     calculateDailySummary();
     calculateWeeklySummary();
